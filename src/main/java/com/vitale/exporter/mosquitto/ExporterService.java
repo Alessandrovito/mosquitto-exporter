@@ -29,7 +29,7 @@ public class ExporterService {
 
     @Scheduled(initialDelayString = "10000", fixedDelayString = "${mosquitto.exporter.refresh-reconnect-ms:60000}")
     void refresh() {
-        logger.debug("Run refresh mqtt clien connection");
+        logger.debug("Run refresh mqtt client connection");
         /*
          * This implementation aim to disconnect and reconnect MQTT client to broker in order to get some metrics ( connectio, uptime)
          * sent by Broker only at first connection of client.
