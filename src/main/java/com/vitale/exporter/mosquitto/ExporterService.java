@@ -16,11 +16,12 @@ public class ExporterService {
 
     @Value("${mosquitto.exporter.account.username:mosquitto}") private String accountUsername;
     @Value("${mosquitto.exporter.account.password:mosquitto}") private String accountPassword;
+    @Value("${mosquitto.exporter.broker.name:mosquitto}") private String brokerName;
 
     @PostConstruct
     void createClient() {
 
-        client = new MqttConnection(accountUsername, accountPassword);
+        client = new MqttConnection(accountUsername, accountPassword, brokerName);
 
         ExporterPrometheus.MAP_TOPIC_PROMETHEUS.entrySet().stream().forEach(p -> logger.info(" Map Topic Prometheus: entry: [{}]", p));
 

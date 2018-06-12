@@ -9,36 +9,43 @@
 
 // Apply the java plugin to add support for Java
 
+buildscript {
+
+	ext {
+		springBootVersion = '1.5.9.RELEASE'
+	}
+	
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+    
+    ext {
+	    springCloudVersion = 'Edgware.SR1'
+    }
+}
 
 apply plugin: 'java'
-apply plugin: 'application'
+apply plugin: 'org.springframework.boot'
 
 
 
-// In this section you declare where to find the dependencies of your project
-repositories {
-    // Use 'jcenter' for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
-}
+repositories { mavenCentral()}
 
 
 
 jar {
     baseName = 'mosquitto-exporter'
     version = '1.0'
-    manifest {
-        attributes 'Main-Class': 'com.vitale.exporter.mosquitto.Exporter'
-    }
-}
 
-mainClassName = 'com.semioty.exporter.mosquitto.Exporter'
+}
 
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-
-
 
 
 // In this section you declare the dependencies for your production and test code
@@ -61,6 +68,19 @@ dependencies {
     compile 'io.prometheus:simpleclient_spring_boot:0.0.21'
      compile('org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.0')
      compile("com.google.guava:guava:19.0")
+}
+
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+repositories {
+    maven {
+        url 'https://repo.spring.io/libs-milestone'
+    }
 }
 
 

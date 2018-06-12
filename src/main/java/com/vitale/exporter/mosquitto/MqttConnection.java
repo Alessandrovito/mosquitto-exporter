@@ -14,22 +14,23 @@ public class MqttConnection {
 
     private static final Logger logger = LoggerFactory.getLogger(MqttConnection.class);
 
-    static final String HOSTNAME_BROKER = "mosquitto";
+    private final String SYS_TOPIC_ALL = "$SYS/#";
 
-    static final String MQTT_BROKER_URL = "tcp://" + HOSTNAME_BROKER + ":1883";
+    private final String CLIENT_ID = "PromExporterClient";
 
-    static final String SYS_TOPIC_ALL = "$SYS/#";
-
-    static final String CLIENT_ID = "PromExporterClient";
+    private final String mqttBrokerUrl;
 
     private MqttClient clientPrometheus;
 
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
+    private final String brokerHost;
 
-    public MqttConnection(String username, String password) {
+    public MqttConnection(String username, String password, String brokerHost) {
         this.username = username;
         this.password = password;
+        this.brokerHost = brokerHost;
+        this.mqttBrokerUrl = "tcp://" + brokerHost + ":1883";
     }
 
     public boolean isValidClient() {
@@ -41,8 +42,8 @@ public class MqttConnection {
         MemoryPersistence persistence = new MemoryPersistence();
 
         try {
-            logger.debug("Parameter:  MQTT Broker  " + MQTT_BROKER_URL + "Account : " + username + " Password +" + password);
-            clientPrometheus = new MqttClient(MQTT_BROKER_URL, CLIENT_ID, persistence);
+            logger.debug("Parameter:  MQTT Broker  " + mqttBrokerUrl + "Account : " + username + " Password +" + password);
+            clientPrometheus = new MqttClient(mqttBrokerUrl, CLIENT_ID, persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
 
             connOpts.setAutomaticReconnect(false);
@@ -51,7 +52,7 @@ public class MqttConnection {
             connOpts.setUserName(username);
             connOpts.setPassword(password.toCharArray());
 
-            logger.debug("Connecting to broker: " + MQTT_BROKER_URL);
+            logger.debug("Connecting to broker: " + mqttBrokerUrl);
             clientPrometheus.connect(connOpts);
             logger.debug("Connected to Broker");
 

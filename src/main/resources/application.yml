@@ -1,0 +1,25 @@
+server:
+ port: 9180
+ 
+---
+endpoints:
+  prometheus:
+    enabled: true
+    path : "prometheus-metrics"
+    
+    
+---
+#To disable health endpoint for config client to prevent riconfiguration triggered by prometheus polling    
+health:
+  config:
+    enabled: false
+
+#Enable only the endpoint info to permit health check.
+endpoints:
+  enabled: false
+  actuator:
+    enabled: false
+  
+management:
+  security:
+    enabled: false
